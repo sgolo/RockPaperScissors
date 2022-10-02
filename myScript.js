@@ -4,15 +4,9 @@ let computerSelection;
 let playerScore = 0;
 let computerScore = 0;
 
-function capitalize(s) {
-  return s[0].toUpperCase() + s.slice(1);
-}
-//get case insensitive player input
-function getPlayerSelection() {
-  playerSelection = prompt('Select your hand:').toLowerCase();
-  playerSelection = capitalize(playerSelection);
-  return playerSelection;
-}
+const rockBtn = document.querySelector('#Rock');
+const paperBtn = document.querySelector('#Paper');
+const scissorsBtn = document.querySelector('#Scissors');
 
 //computer choice
 function getComputerChoice() {
@@ -30,7 +24,13 @@ function getComputerChoice() {
 }
 
 function keepScore() {
-  if (roundResult == 'win') {
+  if (playerScore == 5) {
+    alert('You WON!');
+    location.reload();
+  } else if (computerScore == 5) {
+    alert('Computer WON!');
+    location.reload();
+  } else if (roundResult == 'win') {
     playerScore++;
     console.log(`You win! ${playerSelection} beats ${computerSelection}`);
   } else if (roundResult == 'lose') {
@@ -39,12 +39,11 @@ function keepScore() {
   } else {
     console.log("It's a tie!");
   }
+  scoreSection.innerHTML = `Your score is ${playerScore} | Computer score is ${computerScore}`;
 }
 //play round and get result
 function playRound() {
-  let playerSelection = getPlayerSelection();
   let computerSelection = getComputerChoice();
-
   if (
     (playerSelection === 'Paper' && computerSelection === 'Rock') ||
     (playerSelection === 'Rock' && computerSelection === 'Scissors') ||
@@ -61,20 +60,42 @@ function playRound() {
   } else {
     roundResult = 'tie';
   }
-  console.log(
-    `Your hand: ${playerSelection} vs Computer hand: ${computerSelection}`
-  );
   return roundResult;
 }
-//play 5 rounds & display score
-function game() {
-  for (let i = 0; i < 5; i++) {
-    playRound();
-    keepScore();
+
+function checkWinner() {
+  if (playerScore == 5) {
+    alert('You WON!');
+    location.reload();
+  } else if (computerScore == 5) {
+    alert('Computer WON!');
+    location.reload();
+  } else {
+    return;
   }
 }
 
-game();
+//complete 5 round game
+function game() {
+  playRound();
+  keepScore();
+  checkWinner();
+}
 
-console.log(`Your score ${playerScore}`);
-console.log(`Computer score ${computerScore}`);
+// get player choice
+rockBtn.addEventListener('click', function (e) {
+  playerSelection = 'Rock';
+  game();
+});
+
+paperBtn.addEventListener('click', function (e) {
+  playerSelection = 'Paper';
+  game();
+});
+
+scissorsBtn.addEventListener('click', function (e) {
+  playerSelection = 'Scissors';
+  game();
+});
+
+scoreSection.innerHTML = `Your score is ${playerScore} | Computer score is ${computerScore}`;
